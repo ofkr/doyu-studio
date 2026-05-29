@@ -335,10 +335,7 @@ export default function ShopDetailPage() {
                       <>
                         <div className="flex flex-col gap-1.5 mb-5">
                           {item.description.filter(Boolean).map((line, i) => (
-                            <div key={i} className="flex items-start gap-2">
-                              <span className="text-[#2d4a1e] mt-0.5 shrink-0">·</span>
-                              <span className="text-sm text-gray-600 leading-relaxed">{line}</span>
-                            </div>
+                            <p key={i} className="text-sm text-gray-600 leading-relaxed">{line}</p>
                           ))}
                         </div>
                         <div className="w-full h-px bg-gray-100 mb-5" />
@@ -356,7 +353,6 @@ export default function ShopDetailPage() {
                         <div className="flex flex-col gap-3 mb-5">
                           {item.material && (
                             <div className="flex items-center gap-4">
-                              <span className="text-xs text-gray-400 w-14 shrink-0">소재</span>
                               <span className="text-sm text-black">{item.material}</span>
                             </div>
                           )}

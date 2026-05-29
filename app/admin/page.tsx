@@ -626,7 +626,7 @@ export default function AdminPage() {
                       </div>
                       <div>
                         <label className="block text-xs text-gray-500 mb-1">재료 / 소재</label>
-                        <input type="text" value={shopForm.material || ''} onChange={(e) => setShopForm({ ...shopForm, material: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]" placeholder="예: 고급 아트지, 에폭시" />
+                        <input type="text" value={shopForm.material || ''} onChange={(e) => setShopForm({ ...shopForm, material: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]" placeholder="예: 소재: 에폭시" />
                       </div>
                       <div>
                         <label className="block text-xs text-gray-500 mb-1">기간</label>
