@@ -191,7 +191,7 @@ export default function AdminPage() {
       price: shopForm.price || '',
       period: shopForm.period || '',
       material: shopForm.material || '',
-      description: (Array.isArray(shopForm.description) ? shopForm.description : []).map((s) => s.trim()).filter(Boolean),
+      description: (Array.isArray(shopForm.description) ? shopForm.description : []).map((s) => s.trim()),
       image: shopForm.image || '',
       images: shopForm.images || [],
       detail_images: shopForm.detail_images || [],
@@ -418,21 +418,6 @@ export default function AdminPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1">콘텐츠 타입</label>
-                      <div className="flex gap-2">
-                        {(['image', 'video'] as const).map((type) => (
-                          <button
-                            key={type}
-                            type="button"
-                            onClick={() => setWorkContentType(type)}
-                            className={`px-4 py-2 text-sm rounded-lg border transition-colors ${workContentType === type ? 'bg-[#2d4a1e] text-white border-[#2d4a1e]' : 'border-gray-200 text-gray-600 hover:border-[#2d4a1e]'}`}
-                          >
-                            {type === 'image' ? '이미지' : '영상'}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
                       <label className="block text-xs text-gray-500 mb-1">제목</label>
                       <input
                         type="text"
@@ -454,6 +439,21 @@ export default function AdminPage() {
                         <label htmlFor="work-custom_available" className="text-sm text-gray-700">커스텀 가능</label>
                       </div>
                     )}
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">콘텐츠 타입</label>
+                      <div className="flex gap-2">
+                        {(['image', 'video'] as const).map((type) => (
+                          <button
+                            key={type}
+                            type="button"
+                            onClick={() => setWorkContentType(type)}
+                            className={`px-4 py-2 text-sm rounded-lg border transition-colors ${workContentType === type ? 'bg-[#2d4a1e] text-white border-[#2d4a1e]' : 'border-gray-200 text-gray-600 hover:border-[#2d4a1e]'}`}
+                          >
+                            {type === 'image' ? '이미지' : '영상'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                     {workContentType === 'video' && (
                       <div>
                         <label className="block text-xs text-gray-500 mb-1">유튜브 영상 URL</label>
@@ -505,6 +505,16 @@ export default function AdminPage() {
                       </div>
                     )}
                     <div>
+                      <label className="block text-xs text-gray-500 mb-1">설명</label>
+                      <textarea
+                        value={workForm.description || ''}
+                        onChange={(e) => setWorkForm({ ...workForm, description: e.target.value })}
+                        className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e] resize-y min-h-[200px]"
+                        rows={10}
+                        placeholder="작업물 설명"
+                      />
+                    </div>
+                    <div>
                       <label className="block text-xs text-gray-500 mb-1">상세 설명 이미지 (상세페이지 하단 세로 나열, 여러 장 가능)</label>
                       <div className="flex flex-col items-start gap-3">
                         <label className={`inline-flex items-center gap-2 px-4 py-2 text-sm border border-gray-200 rounded-lg cursor-pointer hover:border-[#2d4a1e] transition-colors ${workUploading ? 'opacity-50 pointer-events-none' : ''}`}>
@@ -522,16 +532,6 @@ export default function AdminPage() {
                           </div>
                         )}
                       </div>
-                    </div>
-                    <div>
-                      <label className="block text-xs text-gray-500 mb-1">설명</label>
-                      <textarea
-                        value={workForm.description || ''}
-                        onChange={(e) => setWorkForm({ ...workForm, description: e.target.value })}
-                        className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e] resize-y min-h-[200px]"
-                        rows={10}
-                        placeholder="작업물 설명"
-                      />
                     </div>
                   </div>
 
