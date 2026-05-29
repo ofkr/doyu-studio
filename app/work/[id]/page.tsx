@@ -12,7 +12,7 @@ interface WorkItem {
   category: string
   title: string
   custom_available: boolean
-  description: string
+  description: unknown
   images: string[]
   detail_images: string[]
   video_url?: string
@@ -372,7 +372,7 @@ export default function WorkDetailPage() {
                           <>
                             <div className="flex flex-col gap-1 mb-5">
                               {descLines.map((line: string, i: number) => (
-                                <p key={i} className="text-sm text-gray-600">{line}</p>
+                                line ? <p key={i} className="text-sm text-gray-600">{line}</p> : <p key={i} className="h-4" />
                               ))}
                             </div>
                             <div className="w-full h-px bg-gray-100 mb-5" />
