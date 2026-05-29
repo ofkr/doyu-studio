@@ -1,0 +1,224 @@
+'use client'
+import { useState, useEffect } from 'react'
+import { LoginModal } from './LoginModal'
+import { supabase } from './supabase'
+import Image from 'next/image'
+
+export const Desktop = (): JSX.Element => {
+  const [showLogin, setShowLogin] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [nickname, setNickname] = useState<string>('')
+  const navItems = ["WORK", "SHOP", "ABOUT"];
+
+  const fetchNickname = async (userId: string) => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('nickname')
+      .eq('id', userId)
+      .single()
+    if (data) setNickname(data.nickname)
+  }
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+      if (session?.user) fetchNickname(session.user.id)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+      if (session?.user) fetchNickname(session.user.id)
+      else setNickname('')
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  const logout = async () => {
+    await supabase.auth.signOut()
+    setUser(null)
+    setNickname('')
+  }
+
+  const navIcons = [
+    { href: "#", src: "/home.svg", alt: "Home", label: "Home" },
+    { href: "#", src: "/work.svg", alt: "Work", label: "Work" },
+    { href: "#", src: "/shop.svg", alt: "Shop", label: "Shop" },
+  ]
+
+  return (
+    <div className="flex items-start justify-center relative bg-white w-full min-w-[1280px]">
+
+      {/* 상단 네비게이션 */}
+      <header className="fixed top-0 left-0 right-0 flex justify-between items-center px-8 py-3 bg-white/90 backdrop-blur-sm z-10">
+        <div className="font-bold tracking-[0.3em] text-lg">D O Y U</div>
+        <nav className="flex items-center gap-1">
+          {navIcons.map((icon) => (
+            
+            key={icon.label}
+              href={icon.href}
+              className="flex flex-col items-center justify-center w-[64px] h-[64px] rounded-2xl hover:bg-gray-50 transition-colors gap-1"
+            >
+              <Image src={icon.src} alt={icon.alt} width={30} height={30} />
+              <span className="text-[11px] font-bold text-gray-700 tracking-wide">{icon.label}</span>
+            </a>
+          ))}
+          {user ? (
+            <div className="flex items-center gap-3 ml-4">
+              <span className="text-xs text-gray-500">{nickname ? `${nickname}님` : user.email}</span>
+              <button
+                onClick={logout}
+                className="text-sm border border-gray-300 px-4 py-1.5 hover:bg-gray-100 transition-colors"
+              >
+                로그아웃
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowLogin(true)}
+              className="text-sm border border-black px-4 py-1.5 hover:bg-black hover:text-white transition-colors ml-4"
+            >
+              로그인
+            </button>
+          )}
+        </nav>
+      </header>
+
+      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+
+      <aside className="relative w-[300px] sticky top-0 h-screen p-4 flex flex-col gap-[120px] bg-white pt-24">
+        <nav className="flex flex-col gap-5">
+          {navItems.map((item) => (
+            <a key={item} href="#" className="text-sm text-black hover:text-green-700">
+              {item}
+            </a>
+          ))}
+          <a href="https://www.instagram.com/doyu_snap/" className="text-sm text-green-600 mt-8">
+            Instagram
+          </a>
+        </nav>
+      </aside>
+
+      <main className="flex flex-col flex-1 px-5 pt-24">
+        <section className="pt-[190px] pb-[60px]">
+          <h1 className="text-[140px] font-black leading-none text-[#2d4a1e]">
+            DOYU<br />STUDIO
+          </h1>
+          <div className="flex justify-between items-end mt-8">
+            <div>
+              <p className="text-sm">Built from daily life, shared space, and small moments.</p>
+              <p className="text-xs text-gray-500">함께 살아가는 공간과 일상의 순간들에서 출발합니다.</p>
+            </div>
+            <a href="#" className="text-sm border-b border-black pb-1">See what we make</a>
+          </div>
+        </section>
+
+        <section className="py-[60px]">
+          <h2 className="text-2xl font-bold mb-4">About DOYU</h2>
+          <p className="text-base leading-relaxed">
+            DOYU is a design studio by Hakyoung and Yujoo.<br />
+            We create across graphics, photography, and objects.
+          </p>
+          <div className="mt-8">
+            <p className="text-sm font-semibold">With them. <span className="font-normal text-gray-500">이들과 함께</span></p>
+            <div className="w-full aspect-[1.78] bg-gray-100 mt-4 rounded" />
+          </div>
+        </section>
+
+        <section className="py-[60px]">
+          <div className="flex justify-between items-end mb-[60px]">
+            <h2 className="text-3xl font-bold">WORK</h2>
+            <a href="#" className="text-sm text-green-600">See more</a>
+          </div>
+          <div className="flex gap-5">
+            {[
+              { title: "Cream Butter Mong", sub: "크림 버터 몽", h: "h-[473px]" },
+              { title: "Working hard for you", sub: "집사를 위해 열심히 일하는 중", h: "h-[853px]" },
+            ].map((item) => (
+              <article key={item.title} className="flex flex-col gap-8 flex-1">
+                <div className={`${item.h} bg-gray-200 rounded w-full`} />
+                <div>
+                  <p className="font-semibold text-sm">{item.title}</p>
+                  <p className="text-xs text-gray-500">{item.sub}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="py-[60px]">
+          <div className="flex justify-between items-end mb-[60px]">
+            <h2 className="text-3xl font-bold">SHOP</h2>
+            <a href="#" className="text-sm text-green-600">See more</a>
+          </div>
+          <div className="grid grid-cols-2 gap-0">
+            {["PROJECT 01", "PROJECT 02", "PROJECT 03", "PROJECT 04"].map((project, i) => (
+              <article key={project} className="flex flex-col">
+                <div className="aspect-square bg-gray-200 w-full" />
+                <div className={`flex justify-between items-center px-5 py-8 bg-white ${i % 2 === 0 ? "border-r border-gray-200" : ""}`}>
+                  <span className="text-xs text-gray-500">{project}</span>
+                  <span className="text-sm">Split Signal</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="py-[60px]">
+          <div className="flex justify-between items-end mb-[60px]">
+            <h2 className="text-3xl font-bold">ABOUT</h2>
+            <a href="#" className="text-sm text-green-600">See more</a>
+          </div>
+          <div className="flex gap-5">
+            {[
+              { title: "Wedding snap", sub: "웨딩 스냅" },
+              { title: "Wedding video", sub: "웨딩 영상" },
+            ].map((item) => (
+              <article key={item.title} className="flex flex-col gap-8 flex-1">
+                <div className="aspect-square bg-gray-200 rounded w-full" />
+                <div>
+                  <p className="font-semibold text-sm">{item.title}</p>
+                  <p className="text-xs text-gray-500">{item.sub}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <a href="mailto:hello@doyu.com" className="flex items-center justify-center h-[600px] bg-gray-50 my-[60px]">
+          <div className="bg-black text-white px-20 py-16 text-center">
+            <p className="text-4xl font-bold underline">Let&apos;s work together</p>
+          </div>
+        </a>
+
+        <footer className="border-t border-gray-200 py-[60px]">
+          <div className="flex gap-10">
+            <div className="flex-1">
+              <p className="font-bold text-lg mb-4">DOYU.</p>
+              <address className="not-italic text-sm text-gray-600 leading-relaxed">
+                147 Candyland Lane,<br />Brooklyn, NY 11211
+              </address>
+            </div>
+            <div className="flex-1">
+              <p className="font-bold mb-4">Hours:</p>
+              <p className="text-sm text-gray-600">Monday - Friday:<br />10:00 AM – 5:00 PM</p>
+            </div>
+            <div className="flex-1">
+              <p className="font-bold mb-4">Admission:</p>
+              <p className="text-sm text-gray-600">General: $15<br />Students & Seniors: $10<br />Children under 12: Free</p>
+            </div>
+          </div>
+          <div className="flex justify-between items-center mt-[60px] pt-8 border-t border-gray-200">
+            <p className="text-sm text-gray-400">© 2025</p>
+            <nav className="flex gap-4 text-sm">
+              <a href="#">Home</a>
+              <a href="#">Work</a>
+              <a href="#">Shop</a>
+            </nav>
+            <p className="text-sm text-gray-400">Colin Gridley</p>
+          </div>
+        </footer>
+      </main>
+    </div>
+  );
+};
