@@ -26,7 +26,7 @@ interface ShopItem {
   price: string
   period: string
   material: string
-  description: string[]
+  description: string
   image: string
   images: string[]
   detail_images: string[]
@@ -48,7 +48,7 @@ const getYtThumb = (url: string): string | null => {
 }
 
 const emptyWork: Partial<WorkItem> = { category: 'Graphic Design', title: '', custom_available: true, description: '', image: '', images: [], detail_images: [], video_url: '', is_published: false }
-const emptyShop: Partial<ShopItem> = { title: '', category: 'Paper', price: '', period: '', material: '', description: [], image: '', images: [], detail_images: [], video_url: '', is_published: false }
+const emptyShop: Partial<ShopItem> = { title: '', category: 'Paper', price: '', period: '', material: '', description: '', image: '', images: [], detail_images: [], video_url: '', is_published: false }
 
 export default function AdminPage() {
   const router = useRouter()
@@ -122,18 +122,18 @@ export default function AdminPage() {
     if (data) setWorks(data)
   }
 
-  const normalizeDescription = (desc: unknown): string[] => {
-    if (Array.isArray(desc)) return desc
-    if (typeof desc === 'string' && desc) {
-      try { const parsed = JSON.parse(desc); if (Array.isArray(parsed)) return parsed } catch {}
-      return desc.split('\n')
+  const normalizeDescStr = (desc: unknown): string => {
+    if (Array.isArray(desc)) return desc.join('\n')
+    if (typeof desc === 'string') {
+      try { const parsed = JSON.parse(desc); if (Array.isArray(parsed)) return parsed.join('\n') } catch {}
+      return desc
     }
-    return []
+    return ''
   }
 
   const fetchShops = async () => {
     const { data } = await supabase.from('shops').select('*').order('id')
-    if (data) setShops(data.map((item) => ({ ...item, description: normalizeDescription(item.description) })))
+    if (data) setShops(data.map((item) => ({ ...item, description: normalizeDescStr(item.description) })))
   }
 
   const saveWorkWithStatus = async (isPublished: boolean) => {
@@ -211,7 +211,7 @@ export default function AdminPage() {
       price: shopForm.price || '',
       period: shopForm.period || '',
       material: shopForm.material || '',
-      description: (Array.isArray(shopForm.description) ? shopForm.description : []).map((s) => s.trim()),
+      description: typeof shopForm.description === 'string' ? shopForm.description : '',
       image: shopForm.image || '',
       images: shopForm.images || [],
       detail_images: shopForm.detail_images || [],
@@ -253,7 +253,7 @@ export default function AdminPage() {
   }
 
   const startEditShop = (item: ShopItem) => {
-    setShopForm({ ...item, description: normalizeDescription(item.description) })
+    setShopForm({ ...item, description: normalizeDescStr(item.description) })
     setEditShopId(item.id)
     setShopMode('edit')
     setShopContentType(item.video_url ? 'video' : 'image')
@@ -724,10 +724,10 @@ export default function AdminPage() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1">상세정보 (Enter로 항목 구분)</label>
+                      <label className="block text-xs text-gray-500 mb-1">설명</label>
                       <textarea
-                        value={(Array.isArray(shopForm.description) ? shopForm.description : []).join('\n')}
-                        onChange={(e) => setShopForm({ ...shopForm, description: e.target.value.split('\n') })}
+                        value={typeof shopForm.description === 'string' ? shopForm.description : ''}
+                        onChange={(e) => setShopForm({ ...shopForm, description: e.target.value })}
                         className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e] resize-y min-h-[200px]"
                         rows={10}
                         placeholder=""

@@ -20,13 +20,10 @@ interface WorkItem {
   is_published: boolean
 }
 
-const parseDescription = (desc: unknown): string[] => {
-  if (Array.isArray(desc)) return desc
-  if (typeof desc === 'string' && desc) {
-    try { const parsed = JSON.parse(desc); if (Array.isArray(parsed)) return parsed } catch {}
-    return desc.split('\n')
-  }
-  return []
+const toDescText = (desc: unknown): string => {
+  if (Array.isArray(desc)) return desc.join('\n')
+  if (typeof desc === 'string') return desc
+  return ''
 }
 
 const toEmbedUrl = (url: string): string => {
@@ -274,15 +271,11 @@ export default function WorkDetailPage() {
                     <h1 className="text-2xl md:text-4xl font-black text-[#2d4a1e] mb-5">{item.title}</h1>
                     <div className="w-full h-px bg-gray-100 mb-5" />
                     {(() => {
-                      const descLines = parseDescription(item.description)
-                      if (descLines.length === 0) return null
+                      const text = toDescText(item.description)
+                      if (!text.trim()) return null
                       return (
                         <>
-                          <div className="flex flex-col gap-1 mb-5">
-                            {descLines.map((line: string, i: number) => (
-                              line ? <p key={i} className="text-sm text-gray-600">{line}</p> : <p key={i} className="h-4" />
-                            ))}
-                          </div>
+                          <p className="text-sm text-gray-600 whitespace-pre-wrap mb-5">{text}</p>
                           <div className="w-full h-px bg-gray-100 mb-5" />
                         </>
                       )
@@ -376,15 +369,11 @@ export default function WorkDetailPage() {
                       </span>
                       <div className="w-full h-px bg-gray-100 mb-5" />
                       {(() => {
-                        const descLines = parseDescription(item.description)
-                        if (descLines.length === 0) return null
+                        const text = toDescText(item.description)
+                        if (!text.trim()) return null
                         return (
                           <>
-                            <div className="flex flex-col gap-1 mb-5">
-                              {descLines.map((line: string, i: number) => (
-                                line ? <p key={i} className="text-sm text-gray-600">{line}</p> : <p key={i} className="h-4" />
-                              ))}
-                            </div>
+                            <p className="text-sm text-gray-600 whitespace-pre-wrap mb-5">{text}</p>
                             <div className="w-full h-px bg-gray-100 mb-5" />
                           </>
                         )
