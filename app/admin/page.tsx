@@ -7,7 +7,7 @@ import { LoginModal } from '../LoginModal'
 const ADMIN_EMAIL = 'doyu.works@gmail.com'
 
 interface WorkItem {
-  id: string
+  id: number
   category: string
   title: string
   custom_available: boolean
@@ -20,7 +20,7 @@ interface WorkItem {
 }
 
 interface ShopItem {
-  id: string
+  id: number
   title: string
   category: string
   price: string
