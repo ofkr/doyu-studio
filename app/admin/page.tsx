@@ -733,7 +733,7 @@ export default function AdminPage() {
                         onChange={(e) => setShopForm({ ...shopForm, description: e.target.value.split('\n') })}
                         className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e] resize-y min-h-[200px]"
                         rows={10}
-                        placeholder={'항목1\n항목2\n항목3'}
+                        placeholder="상세 정보를 입력해주세요"
                       />
                     </div>
                     {shopContentType === 'video' && (
