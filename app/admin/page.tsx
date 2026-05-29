@@ -528,8 +528,8 @@ export default function AdminPage() {
                       <textarea
                         value={workForm.description || ''}
                         onChange={(e) => setWorkForm({ ...workForm, description: e.target.value })}
-                        className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e] resize-none"
-                        rows={3}
+                        className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e] resize-y"
+                        rows={10}
                         placeholder="작업물 설명"
                       />
                     </div>
@@ -701,8 +701,8 @@ export default function AdminPage() {
                       <textarea
                         value={(Array.isArray(shopForm.description) ? shopForm.description : []).join('\n')}
                         onChange={(e) => setShopForm({ ...shopForm, description: e.target.value.split('\n') })}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e] resize-none"
-                        rows={4}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e] resize-y"
+                        rows={10}
                         placeholder={'항목1\n항목2\n항목3'}
                       />
                     </div>

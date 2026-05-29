@@ -64,7 +64,6 @@ export default function WorkDetailPage() {
   const [current, setCurrent] = useState(0)
   const [dragStartX, setDragStartX] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
-  const [descExpanded, setDescExpanded] = useState(false)
   const touchStartX = useRef(0)
 
   const fetchNickname = async (userId: string) => {
@@ -267,19 +266,12 @@ export default function WorkDetailPage() {
                     {(() => {
                       const descLines = parseDescription(item.description)
                       if (descLines.length === 0) return null
-                      const showExpand = descLines.length > 3
-                      const visibleLines = descExpanded ? descLines : descLines.slice(0, 3)
                       return (
                         <>
                           <div className="flex flex-col gap-1 mb-5">
-                            {visibleLines.map((line: string, i: number) => (
+                            {descLines.map((line: string, i: number) => (
                               <p key={i} className="text-sm text-gray-600">{line}</p>
                             ))}
-                            {showExpand && (
-                              <button onClick={() => setDescExpanded(!descExpanded)} className="text-xs text-[#2d4a1e] mt-1 text-left hover:underline">
-                                {descExpanded ? '접기 ▲' : '더보기 ▼'}
-                              </button>
-                            )}
                           </div>
                           <div className="w-full h-px bg-gray-100 mb-5" />
                         </>
@@ -376,19 +368,12 @@ export default function WorkDetailPage() {
                       {(() => {
                         const descLines = parseDescription(item.description)
                         if (descLines.length === 0) return null
-                        const showExpand = descLines.length > 3
-                        const visibleLines = descExpanded ? descLines : descLines.slice(0, 3)
                         return (
                           <>
                             <div className="flex flex-col gap-1 mb-5">
-                              {visibleLines.map((line: string, i: number) => (
+                              {descLines.map((line: string, i: number) => (
                                 <p key={i} className="text-sm text-gray-600">{line}</p>
                               ))}
-                              {showExpand && (
-                                <button onClick={() => setDescExpanded(!descExpanded)} className="text-xs text-[#2d4a1e] mt-1 text-left hover:underline">
-                                  {descExpanded ? '접기 ▲' : '더보기 ▼'}
-                                </button>
-                              )}
                             </div>
                             <div className="w-full h-px bg-gray-100 mb-5" />
                           </>
