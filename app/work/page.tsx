@@ -284,7 +284,7 @@ export default function WorkPage() {
 
           {/* 카테고리 탭 */}
           <div className="border-b border-gray-200 mb-0">
-            <div className="flex gap-0 overflow-x-auto [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none' }}>
+            <div className="flex gap-0 overflow-x-auto overflow-y-hidden [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none' }}>
               {categories.map((cat) => (
                 <button
                   key={cat}
