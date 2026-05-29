@@ -69,6 +69,7 @@ export default function AdminPage() {
 
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [publishModal, setPublishModal] = useState<'work' | 'shop' | null>(null)
   const [workUploading, setWorkUploading] = useState(false)
   const [shopUploading, setShopUploading] = useState(false)
   const [workIframeKey, setWorkIframeKey] = useState(0)
@@ -161,6 +162,7 @@ export default function AdminPage() {
       setWorkIframeKey((k) => k + 1)
     }
     setSaving(false)
+    if (isPublished) setPublishModal('work')
   }
 
   const deleteWork = async (id: number) => {
@@ -206,6 +208,7 @@ export default function AdminPage() {
       setShopIframeKey((k) => k + 1)
     }
     setSaving(false)
+    if (isPublished) setPublishModal('shop')
   }
 
   const deleteShop = async (id: number) => {
@@ -259,6 +262,42 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+
+      {/* 저장(게시) 완료 모달 */}
+      {publishModal && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center" onClick={() => setPublishModal(null)}>
+          <div className="bg-white w-[360px] rounded-xl shadow-xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="px-8 py-6 border-b border-gray-100">
+              <h2 className="text-base font-bold tracking-widest text-[#2d4a1e]">저장 완료!</h2>
+            </div>
+            <div className="px-8 py-6">
+              <p className="text-sm text-gray-600 leading-relaxed mb-6">저장이 완료됐습니다. 어디로 이동할까요?</p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    if (publishModal === 'work') { setWorkMode('list'); setWorkForm(emptyWork); setEditWorkId(null) }
+                    else { setShopMode('list'); setShopForm(emptyShop); setEditShopId(null) }
+                    setPublishModal(null)
+                  }}
+                  className="flex-1 border border-gray-200 py-3 text-sm rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  목록으로
+                </button>
+                <button
+                  onClick={() => {
+                    window.open(publishModal === 'work' ? '/work' : '/shop', '_blank')
+                    setPublishModal(null)
+                  }}
+                  className="flex-1 bg-[#2d4a1e] text-white py-3 text-sm rounded-lg hover:bg-[#3a5e27] transition-colors"
+                >
+                  페이지 보기
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="bg-[#2d4a1e] text-white px-8 py-4 flex justify-between items-center">
         <button onClick={() => router.push('/')} className="font-bold tracking-widest text-sm">DOYU STUDIO</button>
         <nav className="hidden md:flex items-center gap-6">
