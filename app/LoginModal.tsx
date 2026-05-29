@@ -97,7 +97,7 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     placeholder="email@example.com"
-                    className="w-full border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#2d4a1e] rounded-sm"
+                    className="w-full border border-gray-200 px-4 py-3 text-[16px] outline-none focus:border-[#2d4a1e] rounded-sm"
                   />
                 </div>
                 <div>
@@ -107,7 +107,7 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     placeholder="6자 이상"
-                    className="w-full border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#2d4a1e] rounded-sm"
+                    className="w-full border border-gray-200 px-4 py-3 text-[16px] outline-none focus:border-[#2d4a1e] rounded-sm"
                   />
                 </div>
                 <button
@@ -188,7 +188,7 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="email@example.com"
-                  className="w-full border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#2d4a1e] rounded-sm"
+                  className="w-full border border-gray-200 px-4 py-3 text-[16px] outline-none focus:border-[#2d4a1e] rounded-sm"
                 />
               </div>
               <div>
@@ -198,7 +198,7 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="6자 이상"
-                  className="w-full border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#2d4a1e] rounded-sm"
+                  className="w-full border border-gray-200 px-4 py-3 text-[16px] outline-none focus:border-[#2d4a1e] rounded-sm"
                 />
               </div>
               <div>
@@ -208,7 +208,7 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
                   value={nickname}
                   onChange={e => setNickname(e.target.value)}
                   placeholder="닉네임을 입력하세요"
-                  className="w-full border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#2d4a1e] rounded-sm"
+                  className="w-full border border-gray-200 px-4 py-3 text-[16px] outline-none focus:border-[#2d4a1e] rounded-sm"
                 />
               </div>
               <div>
@@ -236,7 +236,7 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
                   value={name}
                   onChange={e => setName(e.target.value)}
                   placeholder="이름을 입력하세요"
-                  className="w-full border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#2d4a1e] rounded-sm"
+                  className="w-full border border-gray-200 px-4 py-3 text-[16px] outline-none focus:border-[#2d4a1e] rounded-sm"
                 />
               </div>
               <div>
@@ -247,7 +247,7 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
                   onChange={e => setBirth(e.target.value.replace(/[^0-9]/g, ''))}
                   placeholder="19900101 (8자리)"
                   maxLength={8}
-                  className="w-full border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#2d4a1e] rounded-sm"
+                  className="w-full border border-gray-200 px-4 py-3 text-[16px] outline-none focus:border-[#2d4a1e] rounded-sm"
                 />
               </div>
               <div>
@@ -257,7 +257,7 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
                   placeholder="010-0000-0000"
-                  className="w-full border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#2d4a1e] rounded-sm"
+                  className="w-full border border-gray-200 px-4 py-3 text-[16px] outline-none focus:border-[#2d4a1e] rounded-sm"
                 />
               </div>
               <div className="flex gap-3 mt-2">
