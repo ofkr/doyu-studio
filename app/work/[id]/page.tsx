@@ -265,21 +265,19 @@ export default function WorkDetailPage() {
                     <h1 className="text-2xl md:text-4xl font-black text-[#2d4a1e] mb-5">{item.title}</h1>
                     <div className="w-full h-px bg-gray-100 mb-5" />
                     {(() => {
-                      if (!item.description) return null
-                      const lines = item.description.split('\n').filter(Boolean)
-                      if (lines.length === 0) return null
-                      const shown = descExpanded ? lines : lines.slice(0, 3)
+                      const descLines = parseDescription(item.description)
+                      if (descLines.length === 0) return null
+                      const showExpand = descLines.length > 3
+                      const visibleLines = descExpanded ? descLines : descLines.slice(0, 3)
                       return (
                         <>
-                          <div className="mb-5">
-                            <div className="flex flex-col gap-1.5 mb-2">
-                              {shown.map((line, i) => (
-                                <p key={i} className="text-sm text-gray-600 leading-relaxed">{line}</p>
-                              ))}
-                            </div>
-                            {lines.length > 3 && (
-                              <button onClick={() => setDescExpanded(v => !v)} className="text-xs text-[#2d4a1e] hover:underline">
-                                {descExpanded ? '접기' : '더보기'}
+                          <div className="flex flex-col gap-1 mb-5">
+                            {visibleLines.map((line: string, i: number) => (
+                              <p key={i} className="text-sm text-gray-600">{line}</p>
+                            ))}
+                            {showExpand && (
+                              <button onClick={() => setDescExpanded(!descExpanded)} className="text-xs text-[#2d4a1e] mt-1 text-left hover:underline">
+                                {descExpanded ? '접기 ▲' : '더보기 ▼'}
                               </button>
                             )}
                           </div>
@@ -375,12 +373,27 @@ export default function WorkDetailPage() {
                         {item.custom_available ? '커스텀 가능' : '커스텀 불가'}
                       </span>
                       <div className="w-full h-px bg-gray-100 mb-5" />
-                      {item.description && (
-                        <>
-                          <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap mb-5">{item.description}</p>
-                          <div className="w-full h-px bg-gray-100 mb-5" />
-                        </>
-                      )}
+                      {(() => {
+                        const descLines = parseDescription(item.description)
+                        if (descLines.length === 0) return null
+                        const showExpand = descLines.length > 3
+                        const visibleLines = descExpanded ? descLines : descLines.slice(0, 3)
+                        return (
+                          <>
+                            <div className="flex flex-col gap-1 mb-5">
+                              {visibleLines.map((line: string, i: number) => (
+                                <p key={i} className="text-sm text-gray-600">{line}</p>
+                              ))}
+                              {showExpand && (
+                                <button onClick={() => setDescExpanded(!descExpanded)} className="text-xs text-[#2d4a1e] mt-1 text-left hover:underline">
+                                  {descExpanded ? '접기 ▲' : '더보기 ▼'}
+                                </button>
+                              )}
+                            </div>
+                            <div className="w-full h-px bg-gray-100 mb-5" />
+                          </>
+                        )
+                      })()}
                       <a
                         href={KAKAO_URL}
                         target="_blank"
