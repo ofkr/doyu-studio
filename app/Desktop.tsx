@@ -6,8 +6,16 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { HeroSection } from './HeroSection'
 
-interface WorkPreview { id: string; category: string; title: string; custom_available: boolean; image: string }
+interface WorkPreview { id: string; category: string; title: string; custom_available: boolean; image: string; video_url?: string }
 interface ShopPreview { id: string; category: string; title: string; price: string; image: string }
+
+const getYoutubeThumbnail = (url: string): string | null => {
+  const watchMatch = url.match(/youtube\.com\/watch\?v=([^&]+)/)
+  if (watchMatch) return `https://img.youtube.com/vi/${watchMatch[1]}/hqdefault.jpg`
+  const shortMatch = url.match(/youtu\.be\/([^?]+)/)
+  if (shortMatch) return `https://img.youtube.com/vi/${shortMatch[1]}/hqdefault.jpg`
+  return null
+}
 
 const WORK_CAT: Record<string, string> = { '그래픽 디자인': 'Graphic Design', '웨딩 스냅': 'Wedding Snap', '웨딩 영상': 'Wedding Film' }
 const SHOP_CAT: Record<string, string> = { '인쇄물': 'Paper', '굿즈': 'Objects', '촬영': 'Photo & Film' }
@@ -49,9 +57,9 @@ export const Desktop = () => {
   }, [])
 
   useEffect(() => {
-    supabase.from('works').select('id, category, title, custom_available, image').order('id', { ascending: false }).limit(4)
+    supabase.from('works').select('id, category, title, custom_available, image, video_url').eq('is_published', true).order('id', { ascending: false }).limit(4)
       .then(({ data }) => { if (data) setWorkPreviews(data) })
-    supabase.from('shops').select('id, category, title, price, image').order('id', { ascending: false }).limit(4)
+    supabase.from('shops').select('id, category, title, price, image').eq('is_published', true).order('id', { ascending: false }).limit(4)
       .then(({ data }) => { if (data) setShopPreviews(data) })
   }, [])
 
@@ -252,11 +260,14 @@ export const Desktop = () => {
                     <span className="text-[9px] font-medium tracking-widest uppercase text-gray-400">{normWork(item.category)}</span>
                   </div>
                   <div className="relative w-full px-3">
-                    {item.image ? (
-                      <Image src={item.image} alt={item.title} width={0} height={0} sizes="100vw" style={{ width: '100%', height: 'auto', display: 'block' }} />
-                    ) : (
-                      <div className="aspect-square bg-gray-100 w-full" />
-                    )}
+                    {(() => {
+                      const src = (item.video_url ? getYoutubeThumbnail(item.video_url) : null) ?? item.image
+                      return src ? (
+                        <Image src={src} alt={item.title} width={0} height={0} sizes="100vw" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                      ) : (
+                        <div className="aspect-square bg-gray-100 w-full" />
+                      )
+                    })()}
                     <span className="absolute inset-0 group-hover:bg-black/5 transition-colors z-10" />
                   </div>
                   <div className="px-3 pt-2 pb-4">
