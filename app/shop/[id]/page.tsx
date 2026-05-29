@@ -14,7 +14,7 @@ interface ShopItem {
   price: string
   period: string
   material: string
-  description: string[]
+  description: string[] | string
   image: string
   images: string[]
   detail_images: string[]
@@ -331,10 +331,10 @@ export default function ShopDetailPage() {
                     <div className="w-full h-px bg-gray-100 mb-5" />
 
                     {/* 설명 텍스트 */}
-                    {parseDescription(item.description).length > 0 && (
+                    {Array.isArray(item.description) && item.description.filter(Boolean).length > 0 ? (
                       <>
                         <div className="flex flex-col gap-1.5 mb-5">
-                          {parseDescription(item.description).map((line, i) => (
+                          {item.description.filter(Boolean).map((line, i) => (
                             <div key={i} className="flex items-start gap-2">
                               <span className="text-[#2d4a1e] mt-0.5 shrink-0">·</span>
                               <span className="text-sm text-gray-600 leading-relaxed">{line}</span>
@@ -343,7 +343,12 @@ export default function ShopDetailPage() {
                         </div>
                         <div className="w-full h-px bg-gray-100 mb-5" />
                       </>
-                    )}
+                    ) : typeof item.description === 'string' && item.description ? (
+                      <>
+                        <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap mb-5">{item.description}</p>
+                        <div className="w-full h-px bg-gray-100 mb-5" />
+                      </>
+                    ) : null}
 
                     {/* 소재 / 기간 */}
                     {(item.material || item.period) && (

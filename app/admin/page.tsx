@@ -66,6 +66,7 @@ export default function AdminPage() {
   const [shopForm, setShopForm] = useState<Partial<ShopItem>>(emptyShop)
   const [shopMode, setShopMode] = useState<'list' | 'add' | 'edit'>('list')
   const [editShopId, setEditShopId] = useState<number | null>(null)
+  const [shopContentType, setShopContentType] = useState<'image' | 'video'>('image')
 
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -221,6 +222,7 @@ export default function AdminPage() {
     setShopForm({ ...item, description: normalizeDescription(item.description) })
     setEditShopId(item.id)
     setShopMode('edit')
+    setShopContentType(item.video_url ? 'video' : 'image')
   }
 
   if (authLoading) {
@@ -587,7 +589,7 @@ export default function AdminPage() {
               <h2 className="text-lg font-bold text-gray-800">상품 관리</h2>
               {shopMode === 'list' && (
                 <button
-                  onClick={() => { setShopForm(emptyShop); setShopMode('add'); setError('') }}
+                  onClick={() => { setShopForm(emptyShop); setShopMode('add'); setShopContentType('image'); setError('') }}
                   className="px-4 py-2 bg-[#2d4a1e] text-white text-sm rounded-lg hover:bg-[#3a5e27] transition-colors"
                 >
                   + 추가
@@ -632,6 +634,21 @@ export default function AdminPage() {
                       </div>
                     </div>
                     <div>
+                      <label className="block text-xs text-gray-500 mb-1">콘텐츠 타입</label>
+                      <div className="flex gap-2">
+                        {(['image', 'video'] as const).map((type) => (
+                          <button
+                            key={type}
+                            type="button"
+                            onClick={() => setShopContentType(type)}
+                            className={`px-4 py-2 text-sm rounded-lg border transition-colors ${shopContentType === type ? 'bg-[#2d4a1e] text-white border-[#2d4a1e]' : 'border-gray-200 text-gray-600 hover:border-[#2d4a1e]'}`}
+                          >
+                            {type === 'image' ? '이미지' : '영상'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
                       <label className="block text-xs text-gray-500 mb-1">상세정보 (Enter로 항목 구분)</label>
                       <textarea
                         value={(Array.isArray(shopForm.description) ? shopForm.description : []).join('\n')}
@@ -641,44 +658,50 @@ export default function AdminPage() {
                         placeholder={'항목1\n항목2\n항목3'}
                       />
                     </div>
-                    <div>
-                      <label className="block text-xs text-gray-500 mb-1">유튜브 영상 URL (선택)</label>
-                      <input type="text" value={shopForm.video_url || ''} onChange={(e) => setShopForm({ ...shopForm, video_url: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]" placeholder="https://www.youtube.com/watch?v=..." />
-                    </div>
-                    <div>
-                      <label className="block text-xs text-gray-500 mb-1">대표 이미지 업로드</label>
-                      <div className="flex flex-col items-start gap-3">
-                        <label className={`inline-flex items-center gap-2 px-4 py-2 text-sm border border-gray-200 rounded-lg cursor-pointer hover:border-[#2d4a1e] transition-colors ${shopUploading ? 'opacity-50 pointer-events-none' : ''}`}>
-                          <span>{shopUploading ? '업로드 중...' : '파일 선택'}</span>
-                          <input type="file" accept="image/*" className="hidden" onChange={(e) => { if (!e.target.files?.length) return; uploadFiles(e.target.files, (urls) => setShopForm((prev) => ({ ...prev, image: urls[0] || prev.image })), setShopUploading); e.target.value = '' }} />
-                        </label>
-                        {shopForm.image && (
-                          <div className="relative inline-block group">
-                            <img src={shopForm.image} alt="" className="w-[200px] h-auto rounded border border-gray-200 block" />
-                            <button type="button" onClick={() => setShopForm((prev) => ({ ...prev, image: '' }))} className="absolute top-1 right-1 w-5 h-5 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center text-white text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
-                          </div>
-                        )}
+                    {shopContentType === 'video' && (
+                      <div>
+                        <label className="block text-xs text-gray-500 mb-1">유튜브 영상 URL</label>
+                        <input type="text" value={shopForm.video_url || ''} onChange={(e) => setShopForm({ ...shopForm, video_url: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]" placeholder="https://www.youtube.com/watch?v=..." />
                       </div>
-                    </div>
-                    <div>
-                      <label className="block text-xs text-gray-500 mb-1">슬라이더 이미지 (제품 사진, 여러 장 가능)</label>
-                      <div className="flex flex-col items-start gap-3">
-                        <label className={`inline-flex items-center gap-2 px-4 py-2 text-sm border border-gray-200 rounded-lg cursor-pointer hover:border-[#2d4a1e] transition-colors ${shopUploading ? 'opacity-50 pointer-events-none' : ''}`}>
-                          <span>{shopUploading ? '업로드 중...' : '파일 선택 (여러 장 가능)'}</span>
-                          <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => { if (!e.target.files?.length) return; uploadFiles(e.target.files, (urls) => setShopForm((prev) => ({ ...prev, images: [...(prev.images || []), ...urls] })), setShopUploading); e.target.value = '' }} />
-                        </label>
-                        {(shopForm.images || []).length > 0 && (
-                          <div className="flex flex-wrap gap-3">
-                            {(shopForm.images || []).map((url, i) => (
-                              <div key={i} className="relative inline-block group">
-                                <img src={url} alt="" className="w-[200px] h-auto rounded border border-gray-200 block" />
-                                <button type="button" onClick={() => setShopForm((prev) => ({ ...prev, images: (prev.images || []).filter((_, j) => j !== i) }))} className="absolute top-1 right-1 w-5 h-5 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center text-white text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
-                              </div>
-                            ))}
-                          </div>
-                        )}
+                    )}
+                    {shopContentType === 'image' && (
+                      <div>
+                        <label className="block text-xs text-gray-500 mb-1">대표 이미지 업로드</label>
+                        <div className="flex flex-col items-start gap-3">
+                          <label className={`inline-flex items-center gap-2 px-4 py-2 text-sm border border-gray-200 rounded-lg cursor-pointer hover:border-[#2d4a1e] transition-colors ${shopUploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                            <span>{shopUploading ? '업로드 중...' : '파일 선택'}</span>
+                            <input type="file" accept="image/*" className="hidden" onChange={(e) => { if (!e.target.files?.length) return; uploadFiles(e.target.files, (urls) => setShopForm((prev) => ({ ...prev, image: urls[0] || prev.image })), setShopUploading); e.target.value = '' }} />
+                          </label>
+                          {shopForm.image && (
+                            <div className="relative inline-block group">
+                              <img src={shopForm.image} alt="" className="w-[200px] h-auto rounded border border-gray-200 block" />
+                              <button type="button" onClick={() => setShopForm((prev) => ({ ...prev, image: '' }))} className="absolute top-1 right-1 w-5 h-5 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center text-white text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    )}
+                    {shopContentType === 'image' && (
+                      <div>
+                        <label className="block text-xs text-gray-500 mb-1">슬라이더 이미지 (제품 사진, 여러 장 가능)</label>
+                        <div className="flex flex-col items-start gap-3">
+                          <label className={`inline-flex items-center gap-2 px-4 py-2 text-sm border border-gray-200 rounded-lg cursor-pointer hover:border-[#2d4a1e] transition-colors ${shopUploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                            <span>{shopUploading ? '업로드 중...' : '파일 선택 (여러 장 가능)'}</span>
+                            <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => { if (!e.target.files?.length) return; uploadFiles(e.target.files, (urls) => setShopForm((prev) => ({ ...prev, images: [...(prev.images || []), ...urls] })), setShopUploading); e.target.value = '' }} />
+                          </label>
+                          {(shopForm.images || []).length > 0 && (
+                            <div className="flex flex-wrap gap-3">
+                              {(shopForm.images || []).map((url, i) => (
+                                <div key={i} className="relative inline-block group">
+                                  <img src={url} alt="" className="w-[200px] h-auto rounded border border-gray-200 block" />
+                                  <button type="button" onClick={() => setShopForm((prev) => ({ ...prev, images: (prev.images || []).filter((_, j) => j !== i) }))} className="absolute top-1 right-1 w-5 h-5 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center text-white text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                     <div>
                       <label className="block text-xs text-gray-500 mb-1">상세 설명 이미지 (여러 장 가능)</label>
                       <div className="flex flex-col items-start gap-3">
