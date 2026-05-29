@@ -107,13 +107,13 @@ export default function MyPagePage() {
             <a
               key={icon.label}
               href={icon.href}
-              className="flex flex-col items-center justify-center w-[64px] h-[64px] rounded-2xl hover:bg-gray-50 transition-colors"
+              className="flex flex-col items-center justify-center w-12 h-12 md:w-[64px] md:h-[64px] rounded-2xl hover:bg-gray-50 transition-colors"
             >
-              <div className="w-[32px] h-[32px] flex items-center justify-center">
-                <Image src={icon.src} alt={icon.alt} width={28} height={28} style={{ objectFit: 'contain', width: '28px', height: '28px' }} />
+              <div className="w-5 h-5 md:w-[32px] md:h-[32px] flex items-center justify-center">
+                <Image src={icon.src} alt={icon.alt} width={28} height={28} style={{objectFit:'contain', width:'100%', height:'100%'}} />
               </div>
-              <div className="h-[16px] flex items-center justify-center">
-                <span className="text-[11px] font-bold text-gray-700 tracking-wide">{icon.label}</span>
+              <div className="h-[13px] md:h-[16px] flex items-center justify-center">
+                <span className="text-[9px] md:text-[11px] font-bold text-gray-700 tracking-wide">{icon.label}</span>
               </div>
             </a>
           ))}
@@ -122,13 +122,13 @@ export default function MyPagePage() {
           {user ? (
             <button
               onClick={() => router.push('/mypage')}
-              className="flex flex-col items-center justify-center w-[64px] h-[64px] rounded-2xl hover:bg-gray-50 transition-colors"
+              className="flex flex-col items-center justify-center w-12 h-12 md:w-[64px] md:h-[64px] rounded-2xl hover:bg-gray-50 transition-colors"
             >
-              <div className="w-[32px] h-[32px] flex items-center justify-center">
-                <Image src="/Bullet.svg" alt="profile" width={28} height={28} style={{ objectFit: 'contain', width: '28px', height: '28px' }} />
+              <div className="w-5 h-5 md:w-[32px] md:h-[32px] flex items-center justify-center">
+                <Image src="/Bullet.svg" alt="profile" width={28} height={28} style={{objectFit:'contain', width:'100%', height:'100%'}} />
               </div>
-              <div className="h-[16px] flex items-center justify-center">
-                <span className="text-[11px] font-bold text-[#2d4a1e] tracking-wide truncate max-w-[60px]">
+              <div className="h-[13px] md:h-[16px] flex items-center justify-center">
+                <span className="text-[9px] md:text-[11px] font-bold text-[#2d4a1e] tracking-wide truncate max-w-[48px] md:max-w-[60px]">
                   {profile?.nickname || 'MY'}
                 </span>
               </div>
@@ -137,19 +137,20 @@ export default function MyPagePage() {
 
           {/* 햄버거 메뉴 - 모바일에서만 */}
           <button
-            className="ml-2 flex flex-col gap-1.5 p-2 md:hidden"
-            onClick={() => setMenuOpen(!menuOpen)}
+            type="button"
+            className="w-8 h-8 flex flex-col items-center justify-center gap-1 md:hidden"
+            onClick={() => setMenuOpen(prev => !prev)}
           >
-            <span className={`block w-6 h-0.5 bg-black transition-all ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-            <span className={`block w-6 h-0.5 bg-black transition-all ${menuOpen ? 'opacity-0' : ''}`} />
-            <span className={`block w-6 h-0.5 bg-black transition-all ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+            <span className={`block w-5 h-0.5 bg-black transition-all ${menuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
+            <span className={`block w-5 h-0.5 bg-black transition-all ${menuOpen ? 'opacity-0' : ''}`} />
+            <span className={`block w-5 h-0.5 bg-black transition-all ${menuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
           </button>
         </nav>
       </header>
 
       {/* 모바일 메뉴 */}
       {menuOpen && (
-        <div className="fixed top-[70px] left-0 right-0 bg-white z-20 border-b border-gray-100 shadow-md md:hidden">
+        <div className="fixed top-[70px] left-0 right-0 bg-white z-[9999] border-b border-gray-100 shadow-md md:hidden">
           <nav className="flex flex-col px-8 py-6 gap-5">
             {navItems.map((item) => (
               <a
@@ -361,9 +362,78 @@ export default function MyPagePage() {
       )}
 
       {/* 푸터 */}
-      <footer className="border-t border-gray-100 px-8 py-6 flex justify-between items-center">
-        <p className="text-sm text-gray-400">© 2025</p>
-        <p className="text-sm text-gray-400">DOYU STUDIO</p>
+      <footer className="border-t border-gray-200 pt-[120px] px-5 md:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div>
+            <p className="text-sm font-bold text-[#2d4a1e] mb-3">DOYU STUDIO</p>
+            <p className="text-sm text-gray-700 leading-relaxed">함께 살아가는 순간들을 담습니다</p>
+            <p className="text-xs text-gray-400 mt-1 leading-relaxed">We capture the moments we share.</p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-3">Hours</p>
+            <p className="text-sm text-gray-700">10:00 – 17:00</p>
+            <p className="text-xs text-gray-400 mt-2 leading-relaxed">운영시간 외에도 카카오톡 채널을<br />통한 상담 가능합니다</p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-gray-400 tracking-widest uppercase mb-3">Contact</p>
+            <a
+              href="http://pf.kakao.com/_eMixjX"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-[#2d4a1e] hover:underline"
+            >
+              카카오톡 채널 문의 →
+            </a>
+          </div>
+        </div>
+
+        <div className="flex gap-4 py-[80px]">
+          <div className="relative aspect-square flex-1 overflow-hidden">
+            <Image src="/graphic.png" alt="" fill className="object-cover" />
+          </div>
+          <div className="relative aspect-square flex-1 overflow-hidden">
+            <Image src="/greencat.png" alt="" fill className="object-cover" />
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-[120px]">
+          <p className="text-xs text-gray-400">© 2025 DOYU STUDIO</p>
+          <nav className="flex gap-5 text-xs text-gray-400">
+            <a href="/" className="hover:text-[#2d4a1e] transition-colors">Home</a>
+            <a href="/work" className="hover:text-[#2d4a1e] transition-colors">Work</a>
+            <a href="/shop" className="hover:text-[#2d4a1e] transition-colors">Shop</a>
+          </nav>
+          <a
+            href="https://www.instagram.com/doyu_snap/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-gray-400 hover:text-[#2d4a1e] transition-colors"
+          >
+            Instagram
+          </a>
+          <a
+            href="https://www.youtube.com/@DOYUSTUDIO"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-gray-400 hover:text-[#2d4a1e] transition-colors"
+          >
+            YouTube
+          </a>
+        </div>
+
+        <div className="w-full overflow-hidden">
+          <svg
+            viewBox="0 0 1200 220"
+            preserveAspectRatio="xMidYMax meet"
+            xmlns="http://www.w3.org/2000/svg"
+            width="100%"
+            height="auto"
+          >
+            <circle cx="160" cy="220" r="200" fill="#2d4a1e" />
+            <ellipse cx="600" cy="220" rx="320" ry="140" fill="#e8f0e0" />
+            <path d="M880 220 A200 200 0 0 1 1280 220 Z" fill="#3a5e27" />
+          </svg>
+        </div>
       </footer>
     </div>
   )
