@@ -23,9 +23,9 @@ export const metadata: Metadata = {
   title: "DOYU STUDIO",
   description: "함께 살아가는 순간들을 담습니다 | 그래픽 디자인, 웨딩 스냅, 웨딩 영상",
   icons: {
-    icon: '/doyu.svg',
-    shortcut: '/doyu.svg',
-    apple: '/doyu.svg',
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
   },
 };
 
