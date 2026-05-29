@@ -67,6 +67,8 @@ export default function AdminPage() {
   const [shopMode, setShopMode] = useState<'list' | 'add' | 'edit'>('list')
   const [editShopId, setEditShopId] = useState<number | null>(null)
   const [shopContentType, setShopContentType] = useState<'image' | 'video'>('image')
+  const [shopMaterialLabel, setShopMaterialLabel] = useState('')
+  const [shopMaterialContent, setShopMaterialContent] = useState('')
 
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -223,6 +225,14 @@ export default function AdminPage() {
     setEditShopId(item.id)
     setShopMode('edit')
     setShopContentType(item.video_url ? 'video' : 'image')
+    const colonIdx = (item.material || '').indexOf(':')
+    if (colonIdx !== -1) {
+      setShopMaterialLabel(item.material.slice(0, colonIdx).trim())
+      setShopMaterialContent(item.material.slice(colonIdx + 1).trim())
+    } else {
+      setShopMaterialLabel('')
+      setShopMaterialContent(item.material || '')
+    }
   }
 
   if (authLoading) {
@@ -589,7 +599,7 @@ export default function AdminPage() {
               <h2 className="text-lg font-bold text-gray-800">상품 관리</h2>
               {shopMode === 'list' && (
                 <button
-                  onClick={() => { setShopForm(emptyShop); setShopMode('add'); setShopContentType('image'); setError('') }}
+                  onClick={() => { setShopForm(emptyShop); setShopMode('add'); setShopContentType('image'); setShopMaterialLabel(''); setShopMaterialContent(''); setError('') }}
                   className="px-4 py-2 bg-[#2d4a1e] text-white text-sm rounded-lg hover:bg-[#3a5e27] transition-colors"
                 >
                   + 추가
@@ -626,7 +636,28 @@ export default function AdminPage() {
                       </div>
                       <div>
                         <label className="block text-xs text-gray-500 mb-1">재료 / 소재</label>
-                        <input type="text" value={shopForm.material || ''} onChange={(e) => setShopForm({ ...shopForm, material: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]" placeholder="예: 소재: 에폭시" />
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={shopMaterialLabel}
+                            onChange={(e) => {
+                              setShopMaterialLabel(e.target.value)
+                              setShopForm({ ...shopForm, material: e.target.value ? `${e.target.value}: ${shopMaterialContent}` : shopMaterialContent })
+                            }}
+                            className="w-[40%] border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]"
+                            placeholder="예: 소재, 사이즈"
+                          />
+                          <input
+                            type="text"
+                            value={shopMaterialContent}
+                            onChange={(e) => {
+                              setShopMaterialContent(e.target.value)
+                              setShopForm({ ...shopForm, material: shopMaterialLabel ? `${shopMaterialLabel}: ${e.target.value}` : e.target.value })
+                            }}
+                            className="flex-1 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]"
+                            placeholder="예: 에폭시, A4, 100g"
+                          />
+                        </div>
                       </div>
                       <div>
                         <label className="block text-xs text-gray-500 mb-1">기간</label>
@@ -747,7 +778,7 @@ export default function AdminPage() {
                   <button onClick={() => saveShopWithStatus(true)} disabled={saving} className="px-6 py-2 bg-[#2d4a1e] text-white text-sm rounded-lg hover:bg-[#3a5e27] transition-colors disabled:opacity-50">
                     {saving ? '저장 중...' : '저장(게시)'}
                   </button>
-                  <button onClick={() => { setShopMode('list'); setShopForm(emptyShop); setEditShopId(null); setError('') }} className="px-6 py-2 bg-gray-100 text-gray-600 text-sm rounded-lg hover:bg-gray-200 transition-colors">
+                  <button onClick={() => { setShopMode('list'); setShopForm(emptyShop); setEditShopId(null); setShopMaterialLabel(''); setShopMaterialContent(''); setError('') }} className="px-6 py-2 bg-gray-100 text-gray-600 text-sm rounded-lg hover:bg-gray-200 transition-colors">
                     취소
                   </button>
                 </div>

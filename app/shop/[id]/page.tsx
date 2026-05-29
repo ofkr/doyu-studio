@@ -14,7 +14,7 @@ interface ShopItem {
   price: string
   period: string
   material: string
-  description: string[] | string
+  description: unknown
   image: string
   images: string[]
   detail_images: string[]
@@ -331,21 +331,16 @@ export default function ShopDetailPage() {
                     <div className="w-full h-px bg-gray-100 mb-5" />
 
                     {/* 설명 텍스트 */}
-                    {Array.isArray(item.description) && item.description.filter(Boolean).length > 0 ? (
+                    {parseDescription(item.description).length > 0 && (
                       <>
                         <div className="flex flex-col gap-1.5 mb-5">
-                          {item.description.filter(Boolean).map((line, i) => (
+                          {parseDescription(item.description).map((line, i) => (
                             <p key={i} className="text-sm text-gray-600 leading-relaxed">{line}</p>
                           ))}
                         </div>
                         <div className="w-full h-px bg-gray-100 mb-5" />
                       </>
-                    ) : typeof item.description === 'string' && item.description ? (
-                      <>
-                        <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap mb-5">{item.description}</p>
-                        <div className="w-full h-px bg-gray-100 mb-5" />
-                      </>
-                    ) : null}
+                    )}
 
                     {/* 소재 / 기간 */}
                     {(item.material || item.period) && (
@@ -353,7 +348,14 @@ export default function ShopDetailPage() {
                         <div className="flex flex-col gap-3 mb-5">
                           {item.material && (
                             <div className="flex items-center gap-4">
-                              <span className="text-sm text-black">{item.material}</span>
+                              {item.material.includes(':') ? (
+                                <>
+                                  <span className="text-xs text-gray-400 w-14 shrink-0">{item.material.split(':')[0].trim()}</span>
+                                  <span className="text-sm text-black">{item.material.split(':').slice(1).join(':').trim()}</span>
+                                </>
+                              ) : (
+                                <span className="text-sm text-black">{item.material}</span>
+                              )}
                             </div>
                           )}
                           {item.period && (
