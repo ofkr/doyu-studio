@@ -14,7 +14,7 @@ const SHOP_CAT: Record<string, string> = { '인쇄물': 'Paper', '굿즈': 'Obje
 const normWork = (c: string) => WORK_CAT[c] ?? c
 const normShop = (c: string) => SHOP_CAT[c] ?? c
 
-export const Desktop = (): JSX.Element => {
+export const Desktop = () => {
   const [showLogin, setShowLogin] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [nickname, setNickname] = useState<string>('')
