@@ -351,11 +351,8 @@ export default function AdminPage() {
               href={href}
               className="text-xs text-white/70 hover:text-white transition-colors"
               onClick={(e) => {
-                const isUnsaved = (workMode === 'add' || workMode === 'edit') || (shopMode === 'add' || shopMode === 'edit')
-                if (isUnsaved) {
-                  e.preventDefault()
-                  if (confirm('관리자 페이지에서 나가시겠습니까? 저장하지 않은 내용은 사라집니다.')) router.push(href)
-                }
+                e.preventDefault()
+                if (confirm('관리자 페이지에서 나가시겠습니까? 저장하지 않은 내용은 사라집니다.')) router.push(href!)
               }}
             >
               {label}
@@ -733,7 +730,7 @@ export default function AdminPage() {
                         onChange={(e) => setShopForm({ ...shopForm, description: e.target.value.split('\n') })}
                         className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e] resize-y min-h-[200px]"
                         rows={10}
-                        placeholder="상세 정보를 입력해주세요"
+                        placeholder=""
                       />
                     </div>
                     {shopContentType === 'video' && (
