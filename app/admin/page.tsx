@@ -169,8 +169,22 @@ export default function AdminPage() {
     if (isPublished) setPublishModal('work')
   }
 
+  const extractStoragePath = (url: string): string | null => {
+    const idx = url.indexOf('/images/')
+    return idx !== -1 ? url.slice(idx + '/images/'.length) : null
+  }
+
+  const deleteStorageFiles = async (urls: (string | null | undefined)[]) => {
+    const paths = urls.flatMap((url) => (url ? [extractStoragePath(url)] : [])).filter((p): p is string => p !== null)
+    if (paths.length > 0) await supabase.storage.from('images').remove(paths)
+  }
+
   const deleteWork = async (id: number) => {
     if (!confirm('삭제하시겠습니까?')) return
+    const item = works.find((w) => w.id === id)
+    if (item) {
+      await deleteStorageFiles([item.image, ...(item.images || []), ...(item.detail_images || [])])
+    }
     await supabase.from('works').delete().eq('id', id)
     fetchWorks()
   }
@@ -218,6 +232,10 @@ export default function AdminPage() {
 
   const deleteShop = async (id: number) => {
     if (!confirm('삭제하시겠습니까?')) return
+    const item = shops.find((s) => s.id === id)
+    if (item) {
+      await deleteStorageFiles([item.image, ...(item.images || []), ...(item.detail_images || [])])
+    }
     await supabase.from('shops').delete().eq('id', id)
     fetchShops()
   }
