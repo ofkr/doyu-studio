@@ -659,6 +659,7 @@ export default function AdminPage() {
                 <div className="flex gap-8 items-start">
                   {/* 왼쪽: 입력 폼 */}
                   <div className="flex-1 min-w-0 flex flex-col gap-4">
+                    {/* 1. 카테고리 */}
                     <div>
                       <label className="block text-xs text-gray-500 mb-1">카테고리</label>
                       <select
@@ -669,45 +670,17 @@ export default function AdminPage() {
                         {shopCategories.map((c) => <option key={c} value={c}>{c}</option>)}
                       </select>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs text-gray-500 mb-1">상품명</label>
-                        <input type="text" value={shopForm.title || ''} onChange={(e) => setShopForm({ ...shopForm, title: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]" placeholder="상품명" />
-                      </div>
-                      <div>
-                        <label className="block text-xs text-gray-500 mb-1">가격</label>
-                        <input type="text" value={shopForm.price || ''} onChange={(e) => setShopForm({ ...shopForm, price: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]" placeholder="예: 50,000원~" />
-                      </div>
-                      <div>
-                        <label className="block text-xs text-gray-500 mb-1">재료 / 소재</label>
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={shopMaterialLabel}
-                            onChange={(e) => {
-                              setShopMaterialLabel(e.target.value)
-                              setShopForm({ ...shopForm, material: e.target.value ? `${e.target.value}: ${shopMaterialContent}` : shopMaterialContent })
-                            }}
-                            className="w-[40%] border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]"
-                            placeholder="예: 소재, 사이즈"
-                          />
-                          <input
-                            type="text"
-                            value={shopMaterialContent}
-                            onChange={(e) => {
-                              setShopMaterialContent(e.target.value)
-                              setShopForm({ ...shopForm, material: shopMaterialLabel ? `${shopMaterialLabel}: ${e.target.value}` : e.target.value })
-                            }}
-                            className="flex-1 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]"
-                            placeholder="예: 에폭시, A4, 100g"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-xs text-gray-500 mb-1">기간</label>
-                        <input type="text" value={shopForm.period || ''} onChange={(e) => setShopForm({ ...shopForm, period: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]" placeholder="예: 3~5일" />
-                      </div>
+                    {/* 2. 제목 */}
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">상품명</label>
+                      <input type="text" value={shopForm.title || ''} onChange={(e) => setShopForm({ ...shopForm, title: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]" placeholder="상품명" />
                     </div>
+                    {/* 3. 가격 */}
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">가격</label>
+                      <input type="text" value={shopForm.price || ''} onChange={(e) => setShopForm({ ...shopForm, price: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]" placeholder="예: 50,000원~" />
+                    </div>
+                    {/* 4. 콘텐츠 타입 */}
                     <div>
                       <label className="block text-xs text-gray-500 mb-1">콘텐츠 타입</label>
                       <div className="flex gap-2">
@@ -723,22 +696,7 @@ export default function AdminPage() {
                         ))}
                       </div>
                     </div>
-                    <div>
-                      <label className="block text-xs text-gray-500 mb-1">설명</label>
-                      <textarea
-                        value={typeof shopForm.description === 'string' ? shopForm.description : ''}
-                        onChange={(e) => setShopForm({ ...shopForm, description: e.target.value })}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e] resize-y min-h-[200px]"
-                        rows={10}
-                        placeholder=""
-                      />
-                    </div>
-                    {shopContentType === 'video' && (
-                      <div>
-                        <label className="block text-xs text-gray-500 mb-1">유튜브 영상 URL</label>
-                        <input type="text" value={shopForm.video_url || ''} onChange={(e) => setShopForm({ ...shopForm, video_url: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]" placeholder="https://www.youtube.com/watch?v=..." />
-                      </div>
-                    )}
+                    {/* 5. 이미지: 대표 이미지 / 영상: 유튜브 URL */}
                     {shopContentType === 'image' && (
                       <div>
                         <label className="block text-xs text-gray-500 mb-1">대표 이미지 업로드</label>
@@ -756,6 +714,13 @@ export default function AdminPage() {
                         </div>
                       </div>
                     )}
+                    {shopContentType === 'video' && (
+                      <div>
+                        <label className="block text-xs text-gray-500 mb-1">유튜브 영상 URL</label>
+                        <input type="text" value={shopForm.video_url || ''} onChange={(e) => setShopForm({ ...shopForm, video_url: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]" placeholder="https://www.youtube.com/watch?v=..." />
+                      </div>
+                    )}
+                    {/* 6. 이미지: 슬라이더 이미지 */}
                     {shopContentType === 'image' && (
                       <div>
                         <label className="block text-xs text-gray-500 mb-1">슬라이더 이미지 (제품 사진, 여러 장 가능)</label>
@@ -777,6 +742,49 @@ export default function AdminPage() {
                         </div>
                       </div>
                     )}
+                    {/* 7. 재료/소재 */}
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">재료 / 소재</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={shopMaterialLabel}
+                          onChange={(e) => {
+                            setShopMaterialLabel(e.target.value)
+                            setShopForm({ ...shopForm, material: e.target.value ? `${e.target.value}: ${shopMaterialContent}` : shopMaterialContent })
+                          }}
+                          className="w-[40%] border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]"
+                          placeholder="예: 소재, 사이즈"
+                        />
+                        <input
+                          type="text"
+                          value={shopMaterialContent}
+                          onChange={(e) => {
+                            setShopMaterialContent(e.target.value)
+                            setShopForm({ ...shopForm, material: shopMaterialLabel ? `${shopMaterialLabel}: ${e.target.value}` : e.target.value })
+                          }}
+                          className="flex-1 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]"
+                          placeholder="예: 에폭시, A4, 100g"
+                        />
+                      </div>
+                    </div>
+                    {/* 8. 기간 */}
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">기간</label>
+                      <input type="text" value={shopForm.period || ''} onChange={(e) => setShopForm({ ...shopForm, period: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e]" placeholder="예: 3~5일" />
+                    </div>
+                    {/* 9. 설명 */}
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">설명</label>
+                      <textarea
+                        value={typeof shopForm.description === 'string' ? shopForm.description : ''}
+                        onChange={(e) => setShopForm({ ...shopForm, description: e.target.value })}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#2d4a1e] resize-y min-h-[200px]"
+                        rows={10}
+                        placeholder=""
+                      />
+                    </div>
+                    {/* 10. 상세 설명 이미지 */}
                     <div>
                       <label className="block text-xs text-gray-500 mb-1">상세 설명 이미지 (여러 장 가능)</label>
                       <div className="flex flex-col items-start gap-3">
