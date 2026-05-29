@@ -64,6 +64,7 @@ export default function WorkDetailPage() {
   const [current, setCurrent] = useState(0)
   const [dragStartX, setDragStartX] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
+  const [descExpanded, setDescExpanded] = useState(false)
   const touchStartX = useRef(0)
 
   const fetchNickname = async (userId: string) => {
@@ -263,12 +264,29 @@ export default function WorkDetailPage() {
                     </p>
                     <h1 className="text-2xl md:text-4xl font-black text-[#2d4a1e] mb-5">{item.title}</h1>
                     <div className="w-full h-px bg-gray-100 mb-5" />
-                    {item.description && (
-                      <>
-                        <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap mb-5">{item.description}</p>
-                        <div className="w-full h-px bg-gray-100 mb-5" />
-                      </>
-                    )}
+                    {(() => {
+                      if (!item.description) return null
+                      const lines = item.description.split('\n').filter(Boolean)
+                      if (lines.length === 0) return null
+                      const shown = descExpanded ? lines : lines.slice(0, 3)
+                      return (
+                        <>
+                          <div className="mb-5">
+                            <div className="flex flex-col gap-1.5 mb-2">
+                              {shown.map((line, i) => (
+                                <p key={i} className="text-sm text-gray-600 leading-relaxed">{line}</p>
+                              ))}
+                            </div>
+                            {lines.length > 3 && (
+                              <button onClick={() => setDescExpanded(v => !v)} className="text-xs text-[#2d4a1e] hover:underline">
+                                {descExpanded ? '접기' : '더보기'}
+                              </button>
+                            )}
+                          </div>
+                          <div className="w-full h-px bg-gray-100 mb-5" />
+                        </>
+                      )
+                    })()}
                     <a
                       href={KAKAO_URL}
                       target="_blank"

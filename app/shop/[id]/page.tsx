@@ -62,6 +62,7 @@ export default function ShopDetailPage() {
   const [current, setCurrent] = useState(0)
   const [dragStartX, setDragStartX] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
+  const [descExpanded, setDescExpanded] = useState(false)
   const touchStartX = useRef(0)
 
   const fetchNickname = async (userId: string) => {
@@ -331,16 +332,28 @@ export default function ShopDetailPage() {
                     <div className="w-full h-px bg-gray-100 mb-5" />
 
                     {/* 설명 텍스트 */}
-                    {parseDescription(item.description).length > 0 && (
-                      <>
-                        <div className="flex flex-col gap-1.5 mb-5">
-                          {parseDescription(item.description).map((line, i) => (
-                            <p key={i} className="text-sm text-gray-600 leading-relaxed">{line}</p>
-                          ))}
-                        </div>
-                        <div className="w-full h-px bg-gray-100 mb-5" />
-                      </>
-                    )}
+                    {(() => {
+                      const lines = parseDescription(item.description)
+                      if (lines.length === 0) return null
+                      const shown = descExpanded ? lines : lines.slice(0, 3)
+                      return (
+                        <>
+                          <div className="mb-5">
+                            <div className="flex flex-col gap-1.5 mb-2">
+                              {shown.map((line, i) => (
+                                <p key={i} className="text-sm text-gray-600 leading-relaxed">{line}</p>
+                              ))}
+                            </div>
+                            {lines.length > 3 && (
+                              <button onClick={() => setDescExpanded(v => !v)} className="text-xs text-[#2d4a1e] hover:underline">
+                                {descExpanded ? '접기' : '더보기'}
+                              </button>
+                            )}
+                          </div>
+                          <div className="w-full h-px bg-gray-100 mb-5" />
+                        </>
+                      )
+                    })()}
 
                     {/* 소재 / 기간 */}
                     {(item.material || item.period) && (
