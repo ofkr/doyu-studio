@@ -61,6 +61,7 @@ export default function AdminPage() {
   const [workForm, setWorkForm] = useState<Partial<WorkItem>>(emptyWork)
   const [workMode, setWorkMode] = useState<'list' | 'add' | 'edit'>('list')
   const [editWorkId, setEditWorkId] = useState<number | null>(null)
+  const [workContentType, setWorkContentType] = useState<'image' | 'video'>('image')
 
   const [shops, setShops] = useState<ShopItem[]>([])
   const [shopForm, setShopForm] = useState<Partial<ShopItem>>(emptyShop)
@@ -178,6 +179,7 @@ export default function AdminPage() {
     setWorkForm({ ...item })
     setEditWorkId(item.id)
     setWorkMode('edit')
+    setWorkContentType(item.video_url ? 'video' : 'image')
   }
 
   const saveShopWithStatus = async (isPublished: boolean) => {
@@ -389,7 +391,7 @@ export default function AdminPage() {
               <h2 className="text-lg font-bold text-gray-800">작업물 관리</h2>
               {workMode === 'list' && (
                 <button
-                  onClick={() => { setWorkForm(emptyWork); setWorkMode('add'); setError('') }}
+                  onClick={() => { setWorkForm(emptyWork); setWorkMode('add'); setWorkContentType('image'); setError('') }}
                   className="px-4 py-2 bg-[#2d4a1e] text-white text-sm rounded-lg hover:bg-[#3a5e27] transition-colors"
                 >
                   + 추가
@@ -416,6 +418,21 @@ export default function AdminPage() {
                       </select>
                     </div>
                     <div>
+                      <label className="block text-xs text-gray-500 mb-1">콘텐츠 타입</label>
+                      <div className="flex gap-2">
+                        {(['image', 'video'] as const).map((type) => (
+                          <button
+                            key={type}
+                            type="button"
+                            onClick={() => setWorkContentType(type)}
+                            className={`px-4 py-2 text-sm rounded-lg border transition-colors ${workContentType === type ? 'bg-[#2d4a1e] text-white border-[#2d4a1e]' : 'border-gray-200 text-gray-600 hover:border-[#2d4a1e]'}`}
+                          >
+                            {type === 'image' ? '이미지' : '영상'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
                       <label className="block text-xs text-gray-500 mb-1">제목</label>
                       <input
                         type="text"
@@ -437,7 +454,7 @@ export default function AdminPage() {
                         <label htmlFor="work-custom_available" className="text-sm text-gray-700">커스텀 가능</label>
                       </div>
                     )}
-                    {workForm.category === 'Wedding Film' && (
+                    {workContentType === 'video' && (
                       <div>
                         <label className="block text-xs text-gray-500 mb-1">유튜브 영상 URL</label>
                         <input
@@ -449,7 +466,7 @@ export default function AdminPage() {
                         />
                       </div>
                     )}
-                    {(workForm.category === 'Graphic Design' || workForm.category === 'Wedding Snap') && (
+                    {workContentType === 'image' && (
                       <div>
                         <label className="block text-xs text-gray-500 mb-1">대표 이미지 (목록 썸네일)</label>
                         <div className="flex flex-col items-start gap-3">
@@ -466,7 +483,7 @@ export default function AdminPage() {
                         </div>
                       </div>
                     )}
-                    {(workForm.category === 'Graphic Design' || workForm.category === 'Wedding Snap') && (
+                    {workContentType === 'image' && (
                       <div>
                         <label className="block text-xs text-gray-500 mb-1">슬라이더 이미지 (상세페이지 상단 스와이프, 여러 장 가능)</label>
                         <div className="flex flex-col items-start gap-3">
@@ -542,7 +559,7 @@ export default function AdminPage() {
                   <button onClick={() => saveWorkWithStatus(true)} disabled={saving} className="px-6 py-2 bg-[#2d4a1e] text-white text-sm rounded-lg hover:bg-[#3a5e27] transition-colors disabled:opacity-50">
                     {saving ? '저장 중...' : '저장(게시)'}
                   </button>
-                  <button onClick={() => { setWorkMode('list'); setWorkForm(emptyWork); setEditWorkId(null); setError('') }} className="px-6 py-2 bg-gray-100 text-gray-600 text-sm rounded-lg hover:bg-gray-200 transition-colors">
+                  <button onClick={() => { setWorkMode('list'); setWorkForm(emptyWork); setEditWorkId(null); setWorkContentType('image'); setError('') }} className="px-6 py-2 bg-gray-100 text-gray-600 text-sm rounded-lg hover:bg-gray-200 transition-colors">
                     취소
                   </button>
                 </div>
