@@ -159,6 +159,12 @@ export default function AdminPage() {
       setWorkMode('edit')
       setWorkIframeKey((k) => k + 1)
     } else if (workMode === 'edit' && editWorkId !== null) {
+      const prev = works.find((w) => w.id === editWorkId)
+      if (prev) {
+        const prevUrls = [prev.image, ...(prev.images || []), ...(prev.detail_images || [])].filter(Boolean)
+        const nextUrls = new Set([payload.image, ...payload.images, ...payload.detail_images].filter(Boolean))
+        await deleteStorageFiles(prevUrls.filter((u) => !nextUrls.has(u)))
+      }
       const { error: err } = await supabase.from('works').update(payload).eq('id', editWorkId)
       if (err) { setError(err.message); setSaving(false); return }
       sessionStorage.removeItem(`preview_work_${editWorkId}`)
@@ -220,6 +226,12 @@ export default function AdminPage() {
       setShopMode('edit')
       setShopIframeKey((k) => k + 1)
     } else if (shopMode === 'edit' && editShopId !== null) {
+      const prev = shops.find((s) => s.id === editShopId)
+      if (prev) {
+        const prevUrls = [prev.image, ...(prev.images || []), ...(prev.detail_images || [])].filter(Boolean)
+        const nextUrls = new Set([payload.image, ...payload.images, ...payload.detail_images].filter(Boolean))
+        await deleteStorageFiles(prevUrls.filter((u) => !nextUrls.has(u)))
+      }
       const { error: err } = await supabase.from('shops').update(payload).eq('id', editShopId)
       if (err) { setError(err.message); setSaving(false); return }
       sessionStorage.removeItem(`preview_shop_${editShopId}`)
