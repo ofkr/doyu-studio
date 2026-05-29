@@ -6,6 +6,7 @@ import { LoginModal } from '../../LoginModal'
 import { supabase } from '../../supabase'
 
 const KAKAO_URL = 'http://pf.kakao.com/_eMixjX'
+const ADMIN_EMAIL = 'doyu.works@gmail.com'
 
 interface WorkItem {
   id: string
@@ -65,6 +66,8 @@ export default function WorkDetailPage() {
   const [dragStartX, setDragStartX] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const touchStartX = useRef(0)
+
+  const isAdmin = user?.email === ADMIN_EMAIL
 
   const fetchNickname = async (userId: string) => {
     const { data } = await supabase.from('profiles').select('nickname').eq('id', userId).single()
@@ -233,10 +236,17 @@ export default function WorkDetailPage() {
             <div className="py-40 text-center text-gray-400 text-sm">불러오는 중...</div>
           ) : !item ? (
             <div className="py-40 text-center text-gray-400 text-sm">작업물을 찾을 수 없습니다.</div>
-          ) : !item.is_published ? (
+          ) : !item.is_published && !isAdmin ? (
             <div className="py-40 text-center text-gray-400 text-sm">준비 중인 페이지입니다.</div>
           ) : (
             <>
+              {!item.is_published && isAdmin && (
+                <div className="w-full bg-yellow-50 border-b border-yellow-200 px-5 py-2.5 text-xs text-yellow-700 flex items-center gap-2">
+                  <span className="font-semibold">임시저장 상태입니다</span>
+                  <span className="text-yellow-500">—</span>
+                  <span>게시하려면 관리자 페이지에서 저장(게시)을 눌러주세요</span>
+                </div>
+              )}
               {item.video_url ? (
                 /* ── 영상 모드: 1컬럼 풀너비 레이아웃 ── */
                 <section className="py-8">
