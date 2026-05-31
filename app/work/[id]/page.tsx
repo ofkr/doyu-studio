@@ -360,13 +360,15 @@ export default function WorkDetailPage() {
                         <span>{normWorkCat(item.category)}</span>
                       </p>
                       <h1 className="text-2xl md:text-3xl font-black text-[#2d4a1e] mb-4">{item.title}</h1>
-                      <span
-                        className={`inline-block self-start px-3 py-1 rounded-full text-xs font-medium mb-5 ${
-                          item.custom_available ? 'bg-[#e8f0e0] text-[#2d4a1e]' : 'bg-gray-100 text-gray-400'
-                        }`}
-                      >
-                        {item.custom_available ? '커스텀 가능' : '커스텀 불가'}
-                      </span>
+                      {(item.category === 'Graphic Design' || item.category === '그래픽 디자인') && (
+                        <span
+                          className={`inline-block self-start px-3 py-1 rounded-full text-xs font-medium mb-5 ${
+                            item.custom_available ? 'bg-[#e8f0e0] text-[#2d4a1e]' : 'bg-gray-100 text-gray-400'
+                          }`}
+                        >
+                          {item.custom_available ? '커스텀 가능' : '커스텀 불가'}
+                        </span>
+                      )}
                       <div className="w-full h-px bg-gray-100 mb-5" />
                       {(() => {
                         const text = toDescText(item.description)
