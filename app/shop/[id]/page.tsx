@@ -273,7 +273,7 @@ export default function ShopDetailPage() {
                     ) : (
                       /* 이미지 슬라이더 */
                       <div
-                        className="relative w-full aspect-square bg-gray-100 overflow-hidden select-none cursor-grab active:cursor-grabbing"
+                        className="relative w-full aspect-square bg-white overflow-hidden select-none cursor-grab active:cursor-grabbing"
                         onTouchStart={onTouchStart}
                         onTouchEnd={onTouchEnd}
                         onMouseDown={onMouseDown}
@@ -283,7 +283,7 @@ export default function ShopDetailPage() {
                         {allImages[current] ? (
                           <Image src={allImages[current]} alt={item.title} fill className="object-contain" />
                         ) : (
-                          <div className="w-full h-full bg-gray-100" />
+                          <div className="w-full h-full bg-white" />
                         )}
                         {allImages.length > 1 && (
                           <>
@@ -318,7 +318,7 @@ export default function ShopDetailPage() {
                           <button
                             key={i}
                             onClick={() => setCurrent(i)}
-                            className={`relative w-20 h-20 shrink-0 bg-gray-100 overflow-hidden border-2 transition-colors ${i === current ? 'border-[#2d4a1e]' : 'border-transparent hover:border-gray-300'}`}
+                            className={`relative w-20 h-20 shrink-0 bg-white overflow-hidden border-2 transition-colors ${i === current ? 'border-[#2d4a1e]' : 'border-transparent hover:border-gray-300'}`}
                           >
                             <Image src={src} alt={`썸네일 ${i + 1}`} fill className="object-cover" />
                           </button>
