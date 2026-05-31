@@ -23,10 +23,19 @@ interface ShopItem {
   is_published: boolean
 }
 
-const toDescText = (desc: unknown): string => {
+const getDescription = (desc: any): string => {
+  if (!desc) return ''
+  if (typeof desc === 'string') {
+    try {
+      const parsed = JSON.parse(desc)
+      if (Array.isArray(parsed)) return parsed.join('\n')
+      return desc
+    } catch {
+      return desc
+    }
+  }
   if (Array.isArray(desc)) return desc.join('\n')
-  if (typeof desc === 'string') return desc
-  return ''
+  return String(desc)
 }
 
 const toEmbedUrl = (url: string): string => {
@@ -339,11 +348,11 @@ export default function ShopDetailPage() {
 
                     {/* 설명 텍스트 */}
                     {(() => {
-                      const text = toDescText(item.description)
+                      const text = getDescription(item.description)
                       if (!text.trim()) return null
                       return (
                         <>
-                          <p className="text-sm text-gray-600 whitespace-pre-wrap mb-5">{text}</p>
+                          <p className="text-sm text-gray-600 whitespace-pre-line mb-5">{text}</p>
                           <div className="w-full h-px bg-gray-100 mb-5" />
                         </>
                       )
